@@ -324,7 +324,24 @@ app.get("/api/stats", auth, async function(req, res) {
 app.get("/", function(req, res) {
   res.json({ status: "CRM ARO API is running", version: "1.0.0" });
 });
+app.get("/leads", async (req, res) => {
+  try {
+    const leads = await Lead.find();
+    res.json(leads);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
+app.post("/leads", async (req, res) => {
+  try {
+    const lead = new Lead(req.body);
+    await lead.save();
+    res.json(lead);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 // ===== START SERVER =====
 var PORT = process.env.PORT || 5000;
 app.listen(PORT, function() {
